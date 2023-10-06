@@ -3,6 +3,7 @@ using System.Text.Json;
 using EventStore.Client;
 using EventStoreDB_ShoppingCart.Events;
 using EventStoreDB_ShoppingCart.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace EventStoreDB_ShoppingCart.Services
@@ -10,14 +11,43 @@ namespace EventStoreDB_ShoppingCart.Services
     public class EventStoreService : IEventStoreService
     {
         private readonly EventStoreClient _eventStoreClient;
+        private readonly Dictionary<string, Action<string>> _subscriptions = new Dictionary<string, Action<string>>();
 
         public EventStoreService(EventStoreClient eventStoreClient)
         {
             _eventStoreClient = eventStoreClient;
         }
 
-        //obtener todos los eventos en forma de texto
+        //Suscribirse a una transmisión para recibir actualizaciones en vivo
+        public async Task SubscribeToStream(string connectionId, Action<string> eventReceivedCallback)
+        {
+            _subscriptions[connectionId] = eventReceivedCallback;
+            var streamName = "shopping_cart_stream";
+            await _eventStoreClient.SubscribeToStreamAsync(
+                streamName,
+                StreamPosition.End,
+                async (subscription, @event, cancellationToken) =>
+                {
+                    var eventType = @event.Event.EventType;
+                    var eventData = Encoding.UTF8.GetString(@event.Event.Data.ToArray());
+                    var eventMessage = $"EventType: {eventType}, Data: {eventData}";
 
+                    // Enviar evento al cliente
+                    if (_subscriptions.TryGetValue(connectionId, out var callback))
+                    {
+                        callback.Invoke(eventMessage);
+                    }
+                }
+            );
+        }
+
+        public async Task UnsubscribeFromStream(string connectionId)
+        {
+            _subscriptions.Remove(connectionId);
+        }
+
+
+        //obtener todos los eventos en forma de texto
         public async Task<IEnumerable<string>> GetEvents()
         {
             //nombre del stream

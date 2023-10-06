@@ -1,4 +1,5 @@
-﻿using EventStoreDB_ShoppingCart.Events;
+﻿using EventStore.Client;
+using EventStoreDB_ShoppingCart.Events;
 using Microsoft.Extensions.Logging;
 
 namespace EventStoreDB_ShoppingCart.Services
@@ -15,6 +16,9 @@ namespace EventStoreDB_ShoppingCart.Services
 
         //Task<string> OrderShipped(OrderShippedEvent @event);
         //Task<string> OrderDelivered(OrderDeliveredEvent @event);
+
+        Task SubscribeToStream(string connectionId, Action<string> eventReceivedCallback);
+        Task UnsubscribeFromStream(string connectionId);
 
     }
 }

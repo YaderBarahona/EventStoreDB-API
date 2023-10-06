@@ -1,7 +1,10 @@
 using EventStore.Client;
+using EventStoreDB_ShoppingCart.Hubs;
 using EventStoreDB_ShoppingCart.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSignalR(); // Agregar SignalR
 
 // Add services to the container.
 
@@ -24,6 +27,9 @@ builder.Services.AddScoped<IEventStoreService, EventStoreService>();
 
 var app = builder.Build();
 
+
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -34,6 +40,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<HubEvent>("/HubEvent");
+});
 
 app.MapControllers();
 
