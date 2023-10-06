@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "Ywh42B4Y6iexH7uRRpliASpaTynaT25iEpzaIZESwk8=",
+  "Source": "EventStoreDB_ShoppingCart",
+  "BasePath": "_content/EventStoreDB_ShoppingCart",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

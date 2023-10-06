@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\EventStoreDB_ShoppingCart.props" />
+</Project>
