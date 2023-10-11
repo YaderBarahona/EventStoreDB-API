@@ -7,6 +7,7 @@ namespace EventStoreDB_ShoppingCart.Services
     public interface IEventStoreService
     {
         Task<IEnumerable<string>> GetEvents();
+        Task<string> ShoppingCartEvent(ShoppingCartEvent @event);
         Task<string> ProductAddedToCart(ProductAddedToCartEvent @event);
         Task<string> ProductRemovedFromCart(ProductRemovedFromCartEvent @event);
         Task<string> Checkout(CheckoutCompletedEvent @event);

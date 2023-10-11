@@ -24,41 +24,41 @@ namespace EventStoreDB_ShoppingCart.Controllers
         }
 
 
-        [HttpPost("subscribeToStream")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
-        public async Task<IActionResult> SubscribeToStream([FromBody] SubscriptionRequest request)
-        {
-            try
-            {
-                await _eventService.SubscribeToStream(request.ConnectionId, async eventData =>
-                {
-                    await _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveEvent", "ShoppingCartEvent", eventData);
-                });
+        //[HttpPost("subscribeToStream")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
+        //public async Task<IActionResult> SubscribeToStream([FromBody] SubscriptionRequest request)
+        //{
+        //    try
+        //    {
+        //        await _eventService.SubscribeToStream(request.ConnectionId, async eventData =>
+        //        {
+        //            await _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveEvent", "ShoppingCartEvent", eventData);
+        //        });
 
-                return Ok("Subscripción exitosa");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new ErrorDetails(500, "Error interno del servidor"));
-            }
-        }
+        //        return Ok("Subscripción exitosa");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new ErrorDetails(500, "Error interno del servidor"));
+        //    }
+        //}
 
-        [HttpPost("unsubscribeFromStream")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
-        public async Task<IActionResult> UnsubscribeFromStream([FromBody] SubscriptionRequest request)
-        {
-            try
-            {
-                await _eventService.UnsubscribeFromStream(request.ConnectionId);
-                return Ok("Desuscripción exitosa");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new ErrorDetails(500, "Error interno del servidor"));
-            }
-        }
+        //[HttpPost("unsubscribeFromStream")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
+        //public async Task<IActionResult> UnsubscribeFromStream([FromBody] SubscriptionRequest request)
+        //{
+        //    try
+        //    {
+        //        await _eventService.UnsubscribeFromStream(request.ConnectionId);
+        //        return Ok("Desuscripción exitosa");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new ErrorDetails(500, "Error interno del servidor"));
+        //    }
+        //}
 
         [HttpGet("events")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<EventBase>))]
@@ -75,6 +75,28 @@ namespace EventStoreDB_ShoppingCart.Controllers
                 return StatusCode(500, new ErrorDetails(500, "Error interno del servidor"));
             }
         }
+
+        [HttpPost("ShoppingCartEvent")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
+        public async Task<IActionResult> ShoppingCartUpdated([FromBody] ShoppingCartEvent @event)
+        {
+            try
+            {
+                var result = await _eventService.ShoppingCartEvent(@event);
+                return Ok(result);
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(new ErrorDetails(400, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ErrorDetails(500, "Error interno del servidor"));
+            }
+        }
+
 
 
         [HttpPost("addProduct")]

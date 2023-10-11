@@ -11,6 +11,7 @@ namespace EventStoreDB_ShoppingCart.Services
     public class EventStoreService : IEventStoreService
     {
         private readonly EventStoreClient _eventStoreClient;
+        //para quitar la suscripción del diccionario (simular una desconexion del stream)
         private readonly Dictionary<string, Action<string>> _subscriptions = new Dictionary<string, Action<string>>();
 
         public EventStoreService(EventStoreClient eventStoreClient)
@@ -71,6 +72,18 @@ namespace EventStoreDB_ShoppingCart.Services
 
             return eventMessages;
         }
+
+        public async Task<string> ShoppingCartEvent(ShoppingCartEvent @event)
+        {
+            ValidateEvent(@event);
+
+            var eventData = CreateEventData("ShoppingCartEvent", @event);
+
+            await AppendEventToStream(eventData);
+
+            return "Carrito de compras";
+        }
+
 
         public async Task<string> ProductAddedToCart(ProductAddedToCartEvent @event)
         {
