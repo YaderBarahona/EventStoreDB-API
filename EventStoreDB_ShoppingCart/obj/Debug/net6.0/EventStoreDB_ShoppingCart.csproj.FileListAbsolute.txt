@@ -37,3 +37,4 @@ C:\Users\Yader Barahona\source\repos\EventStoreDB_ShoppingCart\EventStoreDB_Shop
 C:\Users\Yader Barahona\source\repos\EventStoreDB_ShoppingCart\EventStoreDB_ShoppingCart\obj\Debug\net6.0\EventStoreDB_ShoppingCart.pdb
 C:\Users\Yader Barahona\source\repos\EventStoreDB_ShoppingCart\EventStoreDB_ShoppingCart\obj\Debug\net6.0\EventStoreDB_ShoppingCart.genruntimeconfig.cache
 C:\Users\Yader Barahona\source\repos\EventStoreDB_ShoppingCart\EventStoreDB_ShoppingCart\obj\Debug\net6.0\ref\EventStoreDB_ShoppingCart.dll
+C:\Users\Yader Barahona\source\repos\EventStoreDB_ShoppingCart\EventStoreDB_ShoppingCart\bin\Debug\net6.0\Newtonsoft.Json.dll

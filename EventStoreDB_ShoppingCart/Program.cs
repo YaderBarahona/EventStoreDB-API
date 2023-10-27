@@ -25,6 +25,22 @@ builder.Services.AddSingleton<EventStoreClient>(sp =>
 
 builder.Services.AddScoped<IEventStoreService, EventStoreService>();
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                      });
+});
+
+
+//builder.Services.AddControllers().AddNewtonsoftJson(options =>
+//    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+//);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
